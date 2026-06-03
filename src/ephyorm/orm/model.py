@@ -10,6 +10,7 @@ simplest possible Model class that can:
 
 from typing import Any, Dict, List, Optional, Type, TypeVar
 from src.ephyorm.db.connection import PostgresConnection
+from src.ephyorm.exceptions import ValueValidationError,RuntimeConfigError
 
 T = TypeVar("T", bound="Model")
 
@@ -149,7 +150,7 @@ class Model:
         for col, val in kwargs.items():
             # Basic validation: only alphanumeric + underscore
             if not col.replace("_", "").isalnum():
-                raise ValueError(f"Invalid column name: {col}")
+                raise ValueValidationError(f"Invalid column name: {col}")
             conditions.append(f"{col} = %s")
             values.append(val)
 
@@ -199,7 +200,7 @@ class Model:
             del fields[pk_col]
 
         if not fields:
-            raise ValueError("No fields to insert")
+            raise ValueValidationError("No fields to insert")
 
         columns = list(fields.keys())
         placeholders = ["%s"] * len(columns)
@@ -234,7 +235,7 @@ class Model:
         fields.pop(pk_col, None)
 
         if not fields:
-            raise ValueError("No fields to update")
+            raise ValueValidationError("No fields to update")
 
         set_clauses = []
         values = []
@@ -265,7 +266,7 @@ class Model:
         pk_val = getattr(self, pk_col, None)
 
         if pk_val is None:
-            raise ValueError(f"Cannot delete: {pk_col} is not set")
+            raise ValueValidationError(f"Cannot delete: {pk_col} is not set")
 
         with PostgresConnection(self._get_dsn()) as conn:
             conn.execute(
@@ -306,7 +307,7 @@ class Model:
         """
         if hasattr(cls, "_dsn") and cls._dsn:
             return cls._dsn
-        raise RuntimeError(
+        raise RuntimeConfigError(
             f"{cls.__name__} has no DSN configured. "
             "Set `_dsn` class attribute or override `_get_dsn()`."
         )

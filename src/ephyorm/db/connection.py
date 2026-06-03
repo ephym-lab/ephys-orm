@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from typing import Optional, Any, List, Dict, Set
+from src.ephyorm.exceptions import DBError, RuntimeConfigError
 
 
 class PostgresConnection:
@@ -36,23 +37,23 @@ class PostgresConnection:
         if self._cursor:
             try:
                 self._cursor.close()
-            except Exception:
-                pass
+            except Exception as e:
+                raise DBError(f"Failed to close cursor: {e}")
             self._cursor = None
         
         if self._conn:
             try:
                 self._conn.close()
-            except Exception:
-                pass
+            except Exception as e:
+                    raise DBError(f"Failed to close connection: {e}")
             self._conn = None
     
     def _check_open(self) -> None:
         """Verify connection and cursor are available."""
         if not self._conn or self._conn.closed:
-            raise RuntimeError("Connection is not open. Use 'with PostgresConnection(...) as conn:'")
+            raise RuntimeConfigError("Connection is not open. Use 'with PostgresConnection(...) as conn:'")
         if not self._cursor:
-            raise RuntimeError("Cursor is not available")
+            raise RuntimeConfigError("Cursor is not available")
     
     def _is_txn_keyword(self, query: str) -> bool:
         """Check if query starts with a transaction control keyword."""
@@ -74,7 +75,7 @@ class PostgresConnection:
         
         if self._is_txn_keyword(query):
             first_word = query.strip().split(maxsplit=1)[0].upper()
-            raise RuntimeError(
+            raise DBError(
                 f"Raw '{first_word}' is not allowed in execute(). "
                 f"Use conn.commit() or conn.rollback() instead, "
                 f"or use conn.execute_raw() if you need manual control."
@@ -93,7 +94,8 @@ class PostgresConnection:
             # queries within the same with block, but the failed transaction
             # is cleaned up.
             self._conn.rollback()
-            raise e
+            raise DBError(str(e))
+            
     
     def execute_raw(self, query: str, params: Optional[tuple] = None) -> List[Dict[str, Any]]:
         """

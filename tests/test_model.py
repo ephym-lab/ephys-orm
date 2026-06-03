@@ -1,5 +1,5 @@
 """
-Base Model & Result Mapping
+Tests for Day 2 – Base Model & Result Mapping
 
 Run with: pytest tests/test_model.py -v
 """
@@ -8,6 +8,7 @@ import pytest
 import psycopg2
 from src.ephyorm.db.connection import PostgresConnection
 from src.ephyorm.orm.model import Model
+from src.ephyorm.exceptions import ValueValidationError, RuntimeConfigError
 
 # ─────────────────────────────────────────────────────────────
 # Configuration
@@ -312,7 +313,7 @@ class TestModelDelete:
         user = User(name="Alice", email="alice@example.com")
         # Never saved, so id is None (auto-init)
 
-        with pytest.raises(ValueError, match="Cannot delete"):
+        with pytest.raises(ValueValidationError, match="Cannot delete"):
             user.delete()
 
 
@@ -341,11 +342,11 @@ class TestModelErrors:
     def test_insert_no_fields_raises(self, setup_database):
         # Create a model with only pk (which is None, so excluded)
         user = User()
-        with pytest.raises(ValueError, match="No fields to insert"):
+        with pytest.raises(ValueValidationError, match="No fields to insert"):
             user.save()
 
     def test_filter_invalid_column_name(self, setup_database):
-        with pytest.raises(ValueError, match="Invalid column name"):
+        with pytest.raises(ValueValidationError, match="Invalid column name"):
             User.filter(**{"name; DROP TABLE users; --": "value"})
 
     def test_filter_sql_injection_safe(self, setup_database):

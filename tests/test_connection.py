@@ -1,6 +1,7 @@
 import pytest
 import psycopg2
 from src.ephyorm.db.connection import PostgresConnection
+from src.ephyorm.exceptions import ValueValidationError, RuntimeConfigError
 
 # DSN strings with password properly quoted to handle semicolon
 TEST_DB_NAME = "orm_test"
@@ -58,8 +59,8 @@ class TestPostgresConnection:
         try:
             with PostgresConnection(TEST_DSN) as pg_conn:
                 conn = pg_conn._conn
-                raise ValueError("Something went wrong")
-        except ValueError:
+                raise ValueValidationError("Something went wrong")
+        except ValueValidationError:
             pass
         
         assert conn.closed != 0
@@ -197,24 +198,24 @@ class TestExecuteGuards:
     
     def test_begin_blocked(self, setup_database):
         with PostgresConnection(TEST_DSN) as conn:
-            with pytest.raises(RuntimeError, match="Raw 'BEGIN' is not allowed"):
+            with pytest.raises(RuntimeConfigError, match="Raw 'BEGIN' is not allowed"):
                 conn.execute("BEGIN")
     
     def test_commit_blocked(self, setup_database):
         with PostgresConnection(TEST_DSN) as conn:
             conn.execute("INSERT INTO users (name) VALUES ('test')")
-            with pytest.raises(RuntimeError, match="Raw 'COMMIT' is not allowed"):
+            with pytest.raises(RuntimeConfigError, match="Raw 'COMMIT' is not allowed"):
                 conn.execute("COMMIT")
             conn.commit()  # This is the proper way
     
     def test_rollback_blocked(self, setup_database):
         with PostgresConnection(TEST_DSN) as conn:
-            with pytest.raises(RuntimeError, match="Raw 'ROLLBACK' is not allowed"):
+            with pytest.raises(RuntimeConfigError, match="Raw 'ROLLBACK' is not allowed"):
                 conn.execute("ROLLBACK")
     
     def test_savepoint_blocked(self, setup_database):
         with PostgresConnection(TEST_DSN) as conn:
-            with pytest.raises(RuntimeError, match="Raw 'SAVEPOINT' is not allowed"):
+            with pytest.raises(RuntimeConfigError, match="Raw 'SAVEPOINT' is not allowed"):
                 conn.execute("SAVEPOINT sp1")
 
 
