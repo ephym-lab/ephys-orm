@@ -142,7 +142,7 @@ class TestModelInstance:
         """When pk is None, it may still appear in _get_field_data.
         The _insert method handles removing it."""
         user = User(name="Alice")
-        fields = user._get_field_data()
+        fields = user._get_field_data(exclude_none_pk=False)
         # id=None is a public attr, so it appears in field_data
         assert "id" in fields
         assert fields["id"] is None

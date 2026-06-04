@@ -59,17 +59,16 @@ class Model:
     # Helper: Get public attributes (exclude private, class config)
     # ─────────────────────────────────────────────────────────────
 
-    def _get_field_data(self) -> Dict[str, Any]:
-        """
-        Return a dict of public field names -> values for SQL operations.
-        Excludes: __table__, __primary_key__, and any _private attrs.
-        """
+    def _get_field_data(self, exclude_none_pk: bool = True) -> Dict[str, Any]:
         fields = {}
+        pk_col = self._get_primary_key()
         for key, value in self.__dict__.items():
-            # Skip private attributes and class-level config keys
             if key.startswith("_"):
                 continue
             if key in ("__table__", "__primary_key__"):
+                continue
+            # Exclude None PK to avoid SERIAL conflicts
+            if exclude_none_pk and key == pk_col and value is None:
                 continue
             fields[key] = value
         return fields
@@ -231,8 +230,12 @@ class Model:
         pk_val = getattr(self, pk_col)
         fields = self._get_field_data()
 
-        # Remove pk from fields -- we don't update the primary key itself
-        fields.pop(pk_col, None)
+        #forbid changing the primary key
+        if pk_col in fields and fields[pk_col] != pk_val:
+            raise ValueValidationError("Cannot change the primary key")
+        else:
+            # Remove pk from fields -- we don't update the primary key itself
+            fields.pop(pk_col, None)
 
         if not fields:
             raise ValueValidationError("No fields to update")
