@@ -39,20 +39,8 @@ def setup_database():
 
 
 
-# def create_table():
-#     with PostgresConnection(User._dsn) as conn:
-#         conn.execute("""
-#             CREATE TABLE IF NOT EXISTS users (
-#                 id SERIAL PRIMARY KEY,
-#                 name VARCHAR(100) NOT NULL,
-#                 email VARCHAR(100) UNIQUE,
-#                 age INTEGER
-#             )
-#         """)
-#         conn.commit()
-
 def create_table():
-    with PostgresConnection(POSTGRES_DSN) as conn:
+    with PostgresConnection(User._dsn) as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
@@ -63,9 +51,28 @@ def create_table():
         """)
         conn.commit()
 
+# def create_table():
+#     with PostgresConnection(POSTGRES_DSN) as conn:
+#         conn.execute("""
+#             CREATE TABLE IF NOT EXISTS users (
+#                 id SERIAL PRIMARY KEY,
+#                 name VARCHAR(100) NOT NULL,
+#                 email VARCHAR(100) UNIQUE,
+#                 age INTEGER
+#             )
+#         """)
+#         conn.commit()
+
 def insert_user():
     user = User.create(name="John", email="ephy@gmail.com", age=30)
     print(user)
+
+def update_user():
+    user = User.filter(name="John")
+    print(user)
+    user[0].age = 31
+    user[0].save()
+
 
 if __name__ == "__main__":
     print("Creating database...")
@@ -82,3 +89,7 @@ if __name__ == "__main__":
     print("Fetching user...")
     user = User.filter(name="John")
     print(user)
+
+    print("Updating user...")
+    update_user()
+    print("User updated.")
