@@ -16,27 +16,25 @@ class User(Model):
     email : str
     age : int
 
-def setup_database():
+# def setup_database():
     
-    """Create the test database and users table."""
-    # Connect to 'postgres' database to create our test DB
-    conn = psycopg2.connect(POSTGRES_DSN)
-    conn.autocommit = True
-    cur = conn.cursor()
+#     """Create the test database and users table."""
+#     # Connect to 'postgres' database to create our test DB
+#     conn = psycopg2.connect(POSTGRES_DSN)
+#     conn.autocommit = True
+#     cur = conn.cursor()
     
-    # Drop and recreate test database
-    cur.execute(f"DROP DATABASE IF EXISTS {TEST_DB_NAME}")
-    cur.execute(f"CREATE DATABASE {TEST_DB_NAME}")
-    cur.close()
-    conn.close()
+#     # Drop and recreate test database
+#     cur.execute(f"DROP DATABASE IF EXISTS {TEST_DB_NAME}")
+#     cur.execute(f"CREATE DATABASE {TEST_DB_NAME}")
+#     cur.close()
+#     conn.close()
 
-# def create_db():
-    
-#     with PostgresConnection(POSTGRES_DSN) as conn:
-#         # conn.execute(f"DROP DATABASE {TEST_DB_NAME}")
-#         conn.execute(f"CREATE DATABASE {TEST_DB_NAME}")
-#         conn.commit()
-
+def create_db():
+    with PostgresConnection(POSTGRES_DSN) as conn:
+        conn.autocommit = True
+        conn.execute_raw(f"DROP DATABASE IF EXISTS {TEST_DB_NAME}")
+        conn.execute_raw(f"CREATE DATABASE {TEST_DB_NAME}")
 
 
 def create_table():
@@ -50,6 +48,7 @@ def create_table():
             )
         """)
         conn.commit()
+
 
 # def create_table():
 #     with PostgresConnection(POSTGRES_DSN) as conn:
@@ -76,7 +75,7 @@ def update_user():
 
 if __name__ == "__main__":
     print("Creating database...")
-    setup_database()
+    create_db()
     print("Database created.")
     print("Creating table...")
     create_table()

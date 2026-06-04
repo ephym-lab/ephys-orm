@@ -4,10 +4,10 @@ Tests for Query Builder
 
 import pytest
 import psycopg2
-from src.ephyorm.db.connection import PostgresConnection
-from src.ephyorm.orm.model import Model
-from src.ephyorm.orm.query import Query
-from src.ephyorm.exceptions import ModelError, ValueValidationError
+from ephyorm.db.connection import PostgresConnection
+from ephyorm.orm.model import Model
+from ephyorm.orm.query import Query
+from ephyorm.exceptions import ModelError, ValueValidationError
 
 # ─────────────────────────────────────────────────────────────
 # Configuration

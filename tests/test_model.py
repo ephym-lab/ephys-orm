@@ -6,9 +6,9 @@ Run with: pytest tests/test_model.py -v
 
 import pytest
 import psycopg2
-from src.ephyorm.db.connection import PostgresConnection
-from src.ephyorm.orm.model import Model
-from src.ephyorm.exceptions import ValueValidationError, RuntimeConfigError
+from ephyorm.db.connection import PostgresConnection
+from ephyorm.orm.model import Model
+from ephyorm.exceptions import ValueValidationError, RuntimeConfigError
 
 # ─────────────────────────────────────────────────────────────
 # Configuration

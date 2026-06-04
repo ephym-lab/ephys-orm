@@ -129,3 +129,15 @@ class PostgresConnection:
     def closed(self) -> bool:
         """Check if the underlying connection is closed."""
         return self._conn is None or self._conn.closed != 0
+
+    @property
+    def autocommit(self) -> bool:
+        """Get the autocommit status of the connection."""
+        self._check_open()
+        return self._conn.autocommit
+
+    @autocommit.setter
+    def autocommit(self, value: bool) -> None:
+        """Set the autocommit status of the connection."""
+        self._check_open()
+        self._conn.autocommit = value
