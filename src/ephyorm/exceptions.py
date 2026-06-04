@@ -22,4 +22,13 @@ class ValueValidationError(EphyormError):
     """Exception for invalid values."""
     def __init__(self, message: str) -> None:
         super().__init__(message)
-        
+
+class QueryError(EphyormError):
+    """Exception for query builder errors."""
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
+class ExecutionError(EphyormError):
+    """Exception for query execution errors."""
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
