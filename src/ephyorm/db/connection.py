@@ -1,7 +1,7 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from typing import Optional, Any, List, Dict, Set
-from src.ephyorm.exceptions import DBError, RuntimeConfigError
+from ephyorm.exceptions import DBError, RuntimeConfigError
 
 
 class PostgresConnection:

@@ -4,8 +4,8 @@ Updated for Query Builder integration
 """
 
 from typing import Any, Dict, List, Optional, Type, TypeVar
-from src.ephyorm.db.connection import PostgresConnection
-from src.ephyorm.exceptions import ValueValidationError, RuntimeConfigError
+from ephyorm.db.connection import PostgresConnection
+from ephyorm.exceptions import ValueValidationError, RuntimeConfigError
 
 T = TypeVar("T", bound="Model")
 
@@ -58,17 +58,17 @@ class Model:
 
     @classmethod
     def get(cls: Type[T], pk: Any) -> Optional[T]:
-        from src.ephyorm.orm.query import Query
+        from ephyorm.orm.query import Query
         return Query(cls).where(**{cls._get_primary_key(): pk}).first()
 
     @classmethod
     def all(cls: Type[T]) -> List[T]:
-        from src.ephyorm.orm.query import Query
+        from ephyorm.orm.query import Query
         return Query(cls).all()
 
     @classmethod
     def filter(cls: Type[T], **kwargs: Any) -> List[T]:
-        from src.ephyorm.orm.query import Query
+        from ephyorm.orm.query import Query
         return Query(cls).where(**kwargs).all()
 
     # ─────────────────────────────────────────────────────────────

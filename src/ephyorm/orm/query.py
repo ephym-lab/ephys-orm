@@ -5,8 +5,8 @@ This is the core of every ORM's fluent interface.
 """
 
 from typing import Any, Dict, List, Optional, Type, TypeVar, Tuple
-from src.ephyorm.db.connection import PostgresConnection
-from src.ephyorm.exceptions import ModelError, ValueValidationError
+from ephyorm.db.connection import PostgresConnection
+from ephyorm.exceptions import ModelError, ValueValidationError
 
 T = TypeVar("T")
 

@@ -9,8 +9,8 @@ simplest possible Model class that can:
 """
 
 from typing import Any, Dict, List, Optional, Type, TypeVar
-from src.ephyorm.db.connection import PostgresConnection
-from src.ephyorm.exceptions import ValueValidationError,RuntimeConfigError
+from ephyorm.db.connection import PostgresConnection
+from ephyorm.exceptions import ValueValidationError,RuntimeConfigError
 
 T = TypeVar("T", bound="Model")
 
