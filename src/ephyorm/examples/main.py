@@ -71,6 +71,7 @@ def update_user():
     print(user)
     user[0].age = 31
     user[0].save()
+    return user[0]
 
 
 if __name__ == "__main__":
@@ -90,5 +91,9 @@ if __name__ == "__main__":
     print(user)
 
     print("Updating user...")
-    update_user()
+    user = update_user()
     print("User updated.")
+    print("Calling __repr__ method:")
+    print(user.__repr__())
+    
+

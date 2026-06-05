@@ -152,12 +152,12 @@ class Query:
             sql += f" ORDER BY {order_sql}"
 
         # LIMIT (use passed limit if provided, else self._limit)
-        effective_limit = limit if limit is not None else self._limit
-        if effective_limit is not None:
+        effective_limit = limit if limit is not None and limit > 0 else self._limit
+        if effective_limit is not None and effective_limit > 0:
             sql += f" LIMIT {effective_limit}"
 
         # OFFSET
-        if self._offset is not None:
+        if self._offset is not None and self._offset > 0:
             sql += f" OFFSET {self._offset}"
 
         return sql, tuple(params)
