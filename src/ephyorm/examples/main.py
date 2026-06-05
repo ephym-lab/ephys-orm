@@ -1,6 +1,7 @@
 from ephyorm.db.connection import PostgresConnection
 from ephyorm.orm.query import Query
 from ephyorm.orm.model_v2 import Model
+from ephyorm.exceptions import DoesNotExistError
 import psycopg2
 
 
@@ -95,5 +96,33 @@ if __name__ == "__main__":
     print("User updated.")
     print("Calling __repr__ method:")
     print(user.__repr__())
-    
+
+
+    print("Fetching non-existent user...")
+    user = User.filter(name="John", age=30)
+    print(user)
+    try:
+        if len(user) >1:
+            for user in user:
+                user.delete()
+        else:
+            user[0].delete()
+                
+    except Exception as e:
+        print(str(e))
+
+    print("Fetching user...")
+    user = User.filter(name="John")
+    print(user)
+    try:
+        if len(user) >1:
+            for user in user:
+                user.delete()
+        elif len(user) == 1:
+            user[0].delete()
+        else:
+            print("No user found")
+                
+    except DoesNotExistError as e:
+        print(e)
 

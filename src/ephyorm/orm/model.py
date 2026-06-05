@@ -10,7 +10,7 @@ simplest possible Model class that can:
 
 from typing import Any, Dict, List, Optional, Type, TypeVar
 from ephyorm.db.connection import PostgresConnection
-from ephyorm.exceptions import ValueValidationError,RuntimeConfigError
+from ephyorm.exceptions import ValueValidationError,RuntimeConfigError,DoesNotExistError
 
 T = TypeVar("T", bound="Model")
 
@@ -110,7 +110,7 @@ class Model:
                 (pk,)
             )
             if not rows:
-                return None
+                return DoesNotExistError(f"{cls.__name__} with {pk_col}={pk} not found")
             return cls._from_row(dict(rows[0]))
 
     @classmethod

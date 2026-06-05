@@ -8,6 +8,11 @@ class ModelError(EphyormError):
     def __init__(self, message: str) -> None:
         super().__init__(message)
 
+class DoesNotExistError(ModelError):
+    """Exception for when a record does not exist."""
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
 class DBError(EphyormError):
     """Exception for database operations."""
     def __init__(self, message: str) -> None:
