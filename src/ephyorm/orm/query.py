@@ -107,7 +107,7 @@ class Query:
         sql, params = self._build_select(limit=2)
         rows = self._execute(sql, params)
         if not rows:
-            raise ModelError(f"{self._model.__name__} matching query does not exist")
+            raise DoesNotExistError(f"{self._model.__name__} matching query does not exist")
         if len(rows) > 1:
             raise ModelError(
                 f"Expected 1 {self._model.__name__}, got {len(rows)}"

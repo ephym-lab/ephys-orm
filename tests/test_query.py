@@ -14,8 +14,8 @@ from ephyorm.exceptions import ModelError, ValueValidationError
 # ─────────────────────────────────────────────────────────────
 
 TEST_DB_NAME = "orm_test_day3"
-POSTGRES_DSN = "dbname=postgres user=myuser password='8%7Pkc&8;JULH' host=127.0.0.1 port=5432"
-TEST_DSN = f"dbname={TEST_DB_NAME} user=myuser password='8%7Pkc&8;JULH' host=127.0.0.1 port=5432"
+POSTGRES_DSN = "dbname=postgres user=postgres password='8%7Pkc&8;JULH' host=127.0.0.1 port=5432"
+TEST_DSN = f"dbname={TEST_DB_NAME} user=postgres password='8%7Pkc&8;JULH' host=127.0.0.1 port=5432"
 
 
 class User(Model):

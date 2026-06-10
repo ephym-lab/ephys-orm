@@ -110,7 +110,7 @@ class Model:
                 (pk,)
             )
             if not rows:
-                return DoesNotExistError(f"{cls.__name__} with {pk_col}={pk} not found")
+                return None
             return cls._from_row(dict(rows[0]))
 
     @classmethod
